@@ -23,6 +23,7 @@ import type { GenerateProductDescriptionOutput } from '@/ai/flows/generate-produ
 const formSchema = z.object({
   title: z.string().min(3, { message: 'Title must be at least 3 characters long.' }),
   category: z.string().min(3, { message: 'Category must be at least 3 characters long.' }),
+  price: z.coerce.number().positive({ message: 'Price must be a positive number.' }),
   description: z.string().min(10, { message: 'Description must be at least 10 characters long.' }),
   keywords: z.string().min(3, { message: 'Please provide some keywords.' }),
 });
@@ -39,6 +40,7 @@ export function ProductForm({ productData, onRestart }: ProductFormProps) {
     defaultValues: {
       title: productData.suggestedTitle,
       category: productData.suggestedCategory,
+      price: productData.suggestedPrice,
       description: productData.productDescription,
       keywords: productData.suggestedKeywords,
     },
@@ -88,6 +90,22 @@ export function ProductForm({ productData, onRestart }: ProductFormProps) {
                   <FormLabel>Product Category</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g. Home & Kitchen" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="price"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Price</FormLabel>
+                  <FormControl>
+                    <div className="relative">
+                      <span className="absolute inset-y-0 left-0 flex items-center pl-3 text-muted-foreground">$</span>
+                      <Input type="number" placeholder="e.g. 29.99" className="pl-7" {...field} />
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>

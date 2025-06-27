@@ -33,6 +33,9 @@ const GenerateProductDescriptionOutputSchema = z.object({
   suggestedKeywords: z
     .string()
     .describe('Keywords which can be used to promote the product.'),
+  suggestedPrice: z
+    .number()
+    .describe('A suggested price for the product in USD. Do not include currency symbols.'),
 });
 export type GenerateProductDescriptionOutput = z.infer<
   typeof GenerateProductDescriptionOutputSchema
@@ -50,7 +53,7 @@ const prompt = ai.definePrompt({
   output: {schema: GenerateProductDescriptionOutputSchema},
   prompt: `You are an expert copywriter specializing in creating compelling product descriptions.
 
-  Based on the transcribed text, generate a grammatically correct and engaging product description, suggest a category for the product, provide a title for the product and also provide keywords to promote the product.
+  Based on the transcribed text, generate a grammatically correct and engaging product description, suggest a category for the product, provide a title for the product, provide keywords to promote the product, and suggest a reasonable price in USD for the product.
 
   Transcribed Text: {{{transcribedText}}}`,
 });
