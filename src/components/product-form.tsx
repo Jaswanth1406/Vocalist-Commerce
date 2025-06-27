@@ -3,6 +3,7 @@
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
+import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import {
   Form,
@@ -19,6 +20,7 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { useToast } from '@/hooks/use-toast';
 import { CheckCircle, RefreshCw } from 'lucide-react';
 import type { GenerateProductDescriptionOutput } from '@/ai/flows/generate-product-description';
+import type { Product } from '@/types/product';
 
 const formSchema = z.object({
   title: z.string().min(3, { message: 'Title must be at least 3 characters long.' }),
@@ -35,6 +37,7 @@ interface ProductFormProps {
 
 export function ProductForm({ productData, onRestart }: ProductFormProps) {
   const { toast } = useToast();
+  const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -47,12 +50,27 @@ export function ProductForm({ productData, onRestart }: ProductFormProps) {
   });
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log('Product saved:', values);
-    toast({
-      title: 'Product Saved!',
-      description: 'Your new product listing has been successfully saved.',
-      variant: 'default',
-    });
+    try {
+      const newProduct: Product = { id: new Date().toISOString(), ...values };
+      const existingProducts: Product[] = JSON.parse(localStorage.getItem('products') || '[]');
+      const updatedProducts = [...existingProducts, newProduct];
+      localStorage.setItem('products', JSON.stringify(updatedProducts));
+
+      toast({
+        title: 'Product Saved!',
+        description: 'Your new product listing has been successfully saved.',
+        variant: 'default',
+      });
+
+      router.push('/products');
+    } catch (error) {
+      console.error("Failed to save product:", error);
+      toast({
+        title: 'Save Error',
+        description: 'Could not save the product. Your browser might be in private mode.',
+        variant: 'destructive',
+      });
+    }
   }
 
   return (

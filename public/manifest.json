@@ -1,0 +1,21 @@
+{
+  "name": "Vocalist Commerce",
+  "short_name": "Vocalist",
+  "description": "An intelligent Voice-to-Catalog AI agent that helps vendors create digital product catalogs using their voice.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#569155",
+  "icons": [
+    {
+      "src": "icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
